@@ -28,6 +28,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    [SerializeField] private Color[] _player1ColorScheme;
+    public Color[] Player1ColorScheme
+    {
+        get { return _player1ColorScheme; }
+    }
+
+    [SerializeField] private Color[] _player2ColorScheme;
+    public Color[] Player2ColorScheme
+    {
+        get { return _player2ColorScheme; }
+    }
+
     public float duration { get; private set; }
 
 
