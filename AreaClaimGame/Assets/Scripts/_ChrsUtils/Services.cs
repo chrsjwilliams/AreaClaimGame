@@ -10,6 +10,8 @@ public class Services
     public static PrefabDB Prefabs { get; set; }
     
     public static InputManager InputManager { get; set; }
-    
+    public static MapManager MapManager { get; set; }
+    public static GameSceneScript GameScene { get; set; }
+
     public static GameSceneManager<TransitionData> Scenes { get; set; }
 }

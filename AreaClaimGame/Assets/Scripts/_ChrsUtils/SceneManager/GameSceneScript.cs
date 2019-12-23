@@ -15,6 +15,12 @@ public class GameSceneScript : Scene<TransitionData>
 
     TaskManager _tm = new TaskManager();
 
+    private int _touchID;
+    public int TouchID
+    {
+        get { return _touchID; }
+    }
+
     private void Start()
     {
         
@@ -22,13 +28,17 @@ public class GameSceneScript : Scene<TransitionData>
 
     internal override void OnEnter(TransitionData data)
     {
+        Services.GameScene = this;
+        Services.MapManager.GenerateMap();
     }
 
-    public void EnterScene()
+    
+
+    internal override void OnExit()
     {
-        
-
+        Services.GameScene = null;
     }
+
 
     public void SwapScene()
     {

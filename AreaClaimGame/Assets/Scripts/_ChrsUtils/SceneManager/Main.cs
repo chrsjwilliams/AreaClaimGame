@@ -82,6 +82,7 @@ public class Main : MonoBehaviour
         Services.Prefabs = Resources.Load<PrefabDB>("Prefabs/PrefabDB");
         Services.InputManager = new InputManager();
         Services.GameManager = GetComponent<GameManager>();
+        Services.MapManager = GetComponent<MapManager>();
         Services.GameManager.Init();
         Services.AudioManager = GetComponent<AudioManager>();
         Services.Scenes = new GameSceneManager<TransitionData>(gameObject, Services.Prefabs.Scenes);

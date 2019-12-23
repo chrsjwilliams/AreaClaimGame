@@ -20,7 +20,7 @@ public class PrefabDB : ScriptableObject
     [SerializeField] private GameObject _mapTile;
     public GameObject MapTile
     {
-        get { return MapTile; }
+        get { return _mapTile; }
     }
 
 }
