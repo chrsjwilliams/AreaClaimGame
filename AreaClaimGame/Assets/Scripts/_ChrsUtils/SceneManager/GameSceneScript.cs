@@ -15,6 +15,19 @@ public class GameSceneScript : Scene<TransitionData>
 
     TaskManager _tm = new TaskManager();
 
+    private int _turnNumber;
+    public int TurnNumber
+    {
+        get { return _turnNumber; }
+    }
+
+    public Player[] players;
+    private Player _currentPlayer;
+    public Player CurrentPlayer
+    {
+        get { return _currentPlayer; }
+    }
+
     private int _touchID;
     public int TouchID
     {
@@ -29,7 +42,15 @@ public class GameSceneScript : Scene<TransitionData>
     internal override void OnEnter(TransitionData data)
     {
         Services.GameScene = this;
+        for(int i = 0; i < players.Length; i++)
+        {
+            players[i].Init(i, false);
+        }
+        _turnNumber = 0;
         Services.MapManager.GenerateMap();
+        _currentPlayer = players[0];
+        Services.EventManager.Register<PlayMade>(OnPlayMade);
+
     }
 
     
@@ -70,4 +91,11 @@ public class GameSceneScript : Scene<TransitionData>
     {
         _tm.Update();
 	}
+
+    public void OnPlayMade(PlayMade play)
+    {
+        _turnNumber++;
+        _currentPlayer = players[TurnNumber % players.Length];
+        
+    }
 }

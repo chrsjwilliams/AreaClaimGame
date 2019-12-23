@@ -11,6 +11,14 @@ public abstract class GameEvent
    
 }
 
+public class PlayMade : GameEvent
+{
+    public MapTile tile;
+    public PlayMade(MapTile _tile)
+    {
+        tile = _tile;
+    }
+}
 
 public class MouseDown : GameEvent{
 	public Vector3 mousePos;

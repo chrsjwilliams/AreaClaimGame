@@ -120,6 +120,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endGame: 0
+  players:
+  - {fileID: 9068521728020731933}
+  - {fileID: 4467653096625937150}
 --- !u!1 &4457938921852713437
 GameObject:
   m_ObjectHideFlags: 0

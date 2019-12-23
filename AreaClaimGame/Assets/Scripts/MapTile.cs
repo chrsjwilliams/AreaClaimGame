@@ -76,7 +76,8 @@ public class MapTile : MonoBehaviour
 
     protected void OnInputDown()
     {
-        SpriteRenderer.color = Services.GameManager.Player1ColorScheme[0];
+        SpriteRenderer.color = Services.GameScene.CurrentPlayer.ColorScheme[0];
+        Services.EventManager.Fire(new PlayMade(this));
 
         Services.EventManager.Unregister<TouchDown>(OnTouchDown);
         Services.EventManager.Unregister<MouseDown>(OnMouseDownEvent);
@@ -120,6 +121,7 @@ public class MapTile : MonoBehaviour
 
     protected void OnInputUp()
     {
+
         Services.EventManager.Register<TouchDown>(OnTouchDown);
         Services.EventManager.Register<MouseDown>(OnMouseDownEvent);
 
