@@ -80,6 +80,7 @@ public class Main : MonoBehaviour
         Services.EventManager = new GameEventsManager();
         Services.GeneralTaskManager = new TaskManager();
         Services.Prefabs = Resources.Load<PrefabDB>("Prefabs/PrefabDB");
+        Services.CameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
         Services.InputManager = new InputManager();
         Services.GameManager = GetComponent<GameManager>();
         Services.MapManager = GetComponent<MapManager>();

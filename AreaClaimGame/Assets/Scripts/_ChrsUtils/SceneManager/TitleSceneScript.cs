@@ -41,11 +41,7 @@ public class TitleSceneScript : Scene<TransitionData>
         _tm.Do
         (
                
-                        new WaitTask(SECONDS_TO_WAIT))
-          //     .Then(   new LERPColor(click,fontColor, white, 0.5f))
-          //     .Then(   new LERPColor(title,fontColor, white, 0.5f))
-               .Then(   new WaitTask(SECONDS_TO_WAIT))
-              .Then(new ActionTask(ChangeScene)
+              new ActionTask(ChangeScene)
         );
         
     }

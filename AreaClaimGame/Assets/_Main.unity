@@ -154,13 +154,13 @@ MonoBehaviour:
   RESTART_GAME: 8
   _numPlayers: 0
   _player1ColorScheme:
-  - {r: 0.90588236, g: 0.3529412, b: 0.4862745, a: 1}
-  - {r: 0.93333334, g: 0.5529412, b: 0.64705884, a: 1}
   - {r: 0.9647059, g: 0.75686276, b: 0.80784315, a: 1}
+  - {r: 0.93333334, g: 0.5529412, b: 0.64705884, a: 1}
+  - {r: 0.90588236, g: 0.3529412, b: 0.4862745, a: 1}
   _player2ColorScheme:
-  - {r: 0.3529412, g: 0.4862745, b: 0.90588236, a: 1}
-  - {r: 0.5529412, g: 0.64705884, b: 0.93333334, a: 1}
   - {r: 0.75686276, g: 0.80784315, b: 0.9647059, a: 1}
+  - {r: 0.5529412, g: 0.64705884, b: 0.93333334, a: 1}
+  - {r: 0.3529412, g: 0.4862745, b: 0.90588236, a: 1}
   _mainCamera: {fileID: 0}
 --- !u!114 &197641880
 MonoBehaviour:
@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -227,6 +228,19 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81b0065d66318dd448bfc0f1d96a4195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenEdges: []
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0

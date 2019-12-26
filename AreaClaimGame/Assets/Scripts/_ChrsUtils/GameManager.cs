@@ -54,8 +54,6 @@ public class GameManager : MonoBehaviour
         NumPlayers = 1;
         _mainCamera = Camera.main;
         Services.EventManager.Register<KeyPressedEvent>(OnKeyPressed);
-
-        IntVector2 v = new IntVector2(10, 10);
     }
 
     private void OnKeyPressed(KeyPressedEvent e)

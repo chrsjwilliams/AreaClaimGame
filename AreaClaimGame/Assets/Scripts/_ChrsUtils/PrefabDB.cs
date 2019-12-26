@@ -23,4 +23,17 @@ public class PrefabDB : ScriptableObject
         get { return _mapTile; }
     }
 
+    [SerializeField] private Tile _playerTile;
+    public Tile PlayerTile
+    {
+        get { return _playerTile; }
+    }
+
+    [SerializeField] private GameObject _pieceHolder;
+    public GameObject PieceHolder
+    {
+        get { return _pieceHolder; }
+    }
+
+
 }

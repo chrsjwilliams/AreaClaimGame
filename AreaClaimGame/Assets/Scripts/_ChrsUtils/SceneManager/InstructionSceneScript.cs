@@ -34,8 +34,7 @@ public class InstructionSceneScript : Scene<TransitionData>
         _tm.Do
         (
 
-                        new LERPColor(click, click.color, Color.white, 0.5f))
-               .Then(   new ActionTask(ChangeScene)
+                      new ActionTask(ChangeScene)
         );
     }
 

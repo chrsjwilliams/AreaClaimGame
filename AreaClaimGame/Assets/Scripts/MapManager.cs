@@ -41,8 +41,8 @@ public class MapManager : MonoBehaviour
         GameObject tilePrefab = Services.Prefabs.MapTile;
         GameObject tileMapHolder = GameObject.Find(TILE_MAP_HOLDER);
 
-        _mapHeight = 13;
-        _mapWidth = 13;
+        _mapHeight = 10;
+        _mapWidth = 6;
 
         _map = new MapTile[MapWidth, MapHeight];
         for(int x = 0; x < MapWidth; x++)

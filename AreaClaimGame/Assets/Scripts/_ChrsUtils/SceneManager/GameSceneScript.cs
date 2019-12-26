@@ -6,7 +6,7 @@ using System;
 
 public class GameSceneScript : Scene<TransitionData>
 {
-    public bool endGame;
+    public bool gameOver;
 
     public static bool hasWon { get; private set; }
 
@@ -42,11 +42,13 @@ public class GameSceneScript : Scene<TransitionData>
     internal override void OnEnter(TransitionData data)
     {
         Services.GameScene = this;
+        gameOver = false;
         for(int i = 0; i < players.Length; i++)
         {
             players[i].Init(i, false);
         }
         _turnNumber = 0;
+        Services.CameraController.SetScreenEdges();
         Services.MapManager.GenerateMap();
         _currentPlayer = players[0];
         Services.EventManager.Register<PlayMade>(OnPlayMade);
@@ -90,6 +92,12 @@ public class GameSceneScript : Scene<TransitionData>
 	void Update ()
     {
         _tm.Update();
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            Piece p = new Piece(0, players[0], 1);
+            p.MakePhysicalPiece();
+        }
 	}
 
     public void OnPlayMade(PlayMade play)
