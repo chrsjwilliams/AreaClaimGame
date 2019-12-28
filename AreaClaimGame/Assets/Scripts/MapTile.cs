@@ -77,7 +77,7 @@ public class MapTile : MonoBehaviour
     protected void OnInputDown()
     {
         SpriteRenderer.color = Services.GameScene.CurrentPlayer.ColorScheme[0];
-        Services.EventManager.Fire(new PlayMade(this));
+
 
         Services.EventManager.Unregister<TouchDown>(OnTouchDown);
         Services.EventManager.Unregister<MouseDown>(OnMouseDownEvent);

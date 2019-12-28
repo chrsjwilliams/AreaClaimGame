@@ -28,11 +28,16 @@ public class GameSceneScript : Scene<TransitionData>
         get { return _currentPlayer; }
     }
 
+    public readonly Vector3[] cameraPositions = { new Vector3(2, 2, -10), new Vector3(2, 4, -10), new Vector3(2, 3, -10) };
+    private float panSpeed = 3f;
+
     private int _touchID;
     public int TouchID
     {
         get { return _touchID; }
     }
+
+    float t = 0;
 
     private void Start()
     {
@@ -52,10 +57,11 @@ public class GameSceneScript : Scene<TransitionData>
         Services.MapManager.GenerateMap();
         _currentPlayer = players[0];
         Services.EventManager.Register<PlayMade>(OnPlayMade);
-
+        _currentPlayer = players[0];
+        _tm.Do(new LerpCameraToCurrentPlayer());
     }
 
-    
+
 
     internal override void OnExit()
     {
@@ -95,7 +101,7 @@ public class GameSceneScript : Scene<TransitionData>
 
         if (Input.GetKeyDown(KeyCode.M))
         {
-            Piece p = new Piece(0, players[0], 1);
+            Piece p = new Piece(0, players[CurrentPlayer.PlayerNumber], 1);
             p.MakePhysicalPiece();
         }
 	}
@@ -104,6 +110,7 @@ public class GameSceneScript : Scene<TransitionData>
     {
         _turnNumber++;
         _currentPlayer = players[TurnNumber % players.Length];
-        
+
+        _tm.Do(new LerpCameraToCurrentPlayer());
     }
 }

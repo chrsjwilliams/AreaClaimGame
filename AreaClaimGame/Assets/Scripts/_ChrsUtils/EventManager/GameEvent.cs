@@ -13,10 +13,10 @@ public abstract class GameEvent
 
 public class PlayMade : GameEvent
 {
-    public MapTile tile;
-    public PlayMade(MapTile _tile)
+    public Piece piece;
+    public PlayMade(Piece _piece)
     {
-        tile = _tile;
+        piece = _piece;
     }
 }
 

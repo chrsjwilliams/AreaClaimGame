@@ -10,11 +10,6 @@ public class PieceHolder : MonoBehaviour
      * 
      */
      
-    /*  
-     *  BUG: Peice transform has offset. this needs to be fixed.
-     * 
-     */ 
-
     private int _touchID;
     private SpriteRenderer _spriteRenderer;
 
@@ -58,10 +53,10 @@ public class PieceHolder : MonoBehaviour
         Vector2 extents = _spriteRenderer.bounds.extents;
         Vector2 centerPoint = transform.position;
 
-        return  point.x >= centerPoint.x - (extents.x * 0.5f)&&
-                point.x <= centerPoint.x + (extents.x * 0.5f)&&
-                point.y >= centerPoint.y - (extents.y * 1.5f)&&
-                point.y <= centerPoint.y + (extents.y * 1.5f);
+        return  point.x >= centerPoint.x - (extents.x * 1f)&&
+                point.x <= centerPoint.x + (extents.x * 1f)&&
+                point.y >= centerPoint.y - (extents.y * 1f)&&
+                point.y <= centerPoint.y + (extents.y * 1f);
     }
 
     public Vector3 GetCenterpoint(bool centerTile = false)
@@ -93,8 +88,8 @@ public class PieceHolder : MonoBehaviour
     public void Reposition(Vector3 pos, bool centered = false)
     {
        if (centered) pos -= GetCenterpoint();
-        Debug.Log(pos);
         transform.position = pos;
+        Debug.Log("T: " + transform.position);
 
     }
 
@@ -164,6 +159,8 @@ public class PieceHolder : MonoBehaviour
             MapTile mapTile = Services.MapManager.Map[tile.coord.x, tile.coord.y];
 
         }
+        if(!Placed)
+        Services.EventManager.Fire(new PlayMade(Piece));
     }
 
     protected void OnTouchDown(TouchDown e)
@@ -220,17 +217,11 @@ public class PieceHolder : MonoBehaviour
             float mapEdgeScreenHeight = Services.CameraController.GetMapEdgeScreenHeight();
             Coord roundedInputCoord = new Coord(Mathf.RoundToInt(screenInputPos.x),
                                                 Mathf.RoundToInt(screenInputPos.y));
+            float pieceOffset = mapEdgeScreenHeight * 0.001f;
+
+            Vector3 piecePos = new Vector3(inputPos.x, inputPos.y + pieceOffset, transform.position.z);
             SetTileCoords(transform.localPosition);
-            Vector2 piecePos = new Vector3(  centerCoord.x,
-                                             centerCoord.y,
-                                             transform.localPosition.z);
-
-
-            
-            Reposition(new Vector3(
-                Mathf.RoundToInt(inputPos.x),
-                Mathf.RoundToInt(inputPos.y),
-                transform.position.z));
+            Reposition(piecePos);
 
             //QueuePosition(snappedCoord);
 

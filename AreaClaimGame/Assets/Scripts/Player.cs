@@ -15,6 +15,12 @@ public class Player : MonoBehaviour
         get { return _playerNum; }
     }
 
+    /*
+     *  TODO: Construct player hand and deck 
+     * 
+     */
+    public List<Piece> hand;
+
     public void Init(int playerNumber, bool isAI)
     {
         _playerNum = playerNumber;
