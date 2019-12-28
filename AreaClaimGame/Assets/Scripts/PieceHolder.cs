@@ -8,6 +8,11 @@ public class PieceHolder : MonoBehaviour
      *  TODO:   Maybe have pieces connected along the edge 
      *          then have them lerp out to spaces when selected
      * 
+     */
+     
+    /*  
+     *  BUG: Peice transform has offset. this needs to be fixed.
+     * 
      */ 
 
     private int _touchID;
@@ -88,16 +93,18 @@ public class PieceHolder : MonoBehaviour
     public void Reposition(Vector3 pos, bool centered = false)
     {
        if (centered) pos -= GetCenterpoint();
+        Debug.Log(pos);
         transform.position = pos;
+
     }
 
-    public void SetTileCoords(Coord centerPos)
+    public void SetTileCoords(Vector3 centerPos)
     {
-        centerCoord = centerPos;
 
+        centerCoord = new Coord(Mathf.RoundToInt(centerPos.x), Mathf.RoundToInt(centerPos.y));
         foreach (Tile tile in Piece.Tiles)
         {
-            tile.SetCoord(tile.relativeCoord.Add(centerPos));
+            tile.SetCoord(tile.relativeCoord.Add(centerCoord));
         }
     }
 
@@ -108,6 +115,55 @@ public class PieceHolder : MonoBehaviour
             lastPositions.Dequeue();
         }
         lastPositions.Enqueue(pos);
+    }
+
+    public bool IsPlacementLegal()
+    {
+        return false;
+    }
+
+    public bool IsPlacementLegal(Coord centerCoord)
+    {
+        List<Coord> hypotheticalTileCoords = new List<Coord>();
+        foreach (Tile tile in Piece.Tiles)
+        {
+            hypotheticalTileCoords.Add(tile.coord);
+        }
+        foreach (Coord coord in hypotheticalTileCoords)
+        {
+            if (!Services.MapManager.IsCoordContainedInMap(coord)) return false;
+
+        }
+        return true;
+    }
+
+    public void PlaceAtLocation(Coord ceneterCoordLocation)
+    {
+        //SetTileCoords(transform.localPosition);
+        /*Reposition(new Vector3(
+                                ceneterCoordLocation.x,
+                                ceneterCoordLocation.y,
+                                transform.position.z));
+                                */
+        transform.localPosition = new Vector3(ceneterCoordLocation.x, ceneterCoordLocation.y, -8);
+    }
+
+
+    public void PlaceAtCurrentLocation()
+    {
+        OnPlace();
+        PlaceAtLocation(centerCoord);
+        _placed = true;
+        
+    }
+
+    public void OnPlace()
+    {
+        foreach(Tile tile in Piece.Tiles)
+        {
+            MapTile mapTile = Services.MapManager.Map[tile.coord.x, tile.coord.y];
+
+        }
     }
 
     protected void OnTouchDown(TouchDown e)
@@ -158,14 +214,27 @@ public class PieceHolder : MonoBehaviour
 
     protected void OnInputDrag(Vector2 inputPos)
     {
+        if (!Placed)
+        {
+            Vector3 screenInputPos = Services.GameManager.MainCamera.WorldToScreenPoint(inputPos);
+            float mapEdgeScreenHeight = Services.CameraController.GetMapEdgeScreenHeight();
+            Coord roundedInputCoord = new Coord(Mathf.RoundToInt(screenInputPos.x),
+                                                Mathf.RoundToInt(screenInputPos.y));
+            SetTileCoords(transform.localPosition);
+            Vector2 piecePos = new Vector3(  centerCoord.x,
+                                             centerCoord.y,
+                                             transform.localPosition.z);
+
+
             
             Reposition(new Vector3(
-                inputPos.x,
-                inputPos.y,
+                Mathf.RoundToInt(inputPos.x),
+                Mathf.RoundToInt(inputPos.y),
                 transform.position.z));
+
             //QueuePosition(snappedCoord);
-            
-        
+
+        }
 
         //if (!Services.GameManager.disableUI) SetLegalityGlowStatus();
 
@@ -187,7 +256,17 @@ public class PieceHolder : MonoBehaviour
 
     protected void OnInputUp()
     {
+        if (!Placed)
+        {
+            // piece snapping
+        }
+        if(IsPlacementLegal(centerCoord))
+        {
+            PlaceAtCurrentLocation();
+            Debug.Log("Placed");
+        }
 
+        
         Services.EventManager.Unregister<TouchMove>(OnTouchMove);
         Services.EventManager.Unregister<MouseMove>(OnMouseMoveEvent);
 

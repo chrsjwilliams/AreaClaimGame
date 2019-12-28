@@ -24,6 +24,12 @@ public class MapManager : MonoBehaviour
         get { return _map; }
     }
 
+    private GameObject _tileMapHolder;
+    public GameObject TileMapHolder
+    {
+        get { return _tileMapHolder; }
+    }
+
     [SerializeField]
     private IntVector2 _center;
     public IntVector2 Center
@@ -39,7 +45,7 @@ public class MapManager : MonoBehaviour
     public void GenerateMap()
     {
         GameObject tilePrefab = Services.Prefabs.MapTile;
-        GameObject tileMapHolder = GameObject.Find(TILE_MAP_HOLDER);
+        _tileMapHolder = GameObject.Find(TILE_MAP_HOLDER);
 
         _mapHeight = 10;
         _mapWidth = 6;
@@ -49,7 +55,7 @@ public class MapManager : MonoBehaviour
         {
             for(int y = 0; y < MapHeight; y++)
             {
-                MapTile newTile = Instantiate(tilePrefab, tileMapHolder.transform).GetComponent<MapTile>();
+                MapTile newTile = Instantiate(tilePrefab, _tileMapHolder.transform).GetComponent<MapTile>();
                 Coord tileCoord = new Coord(x, y);
                 newTile.Init(tileCoord);
                 _map[x, y] = newTile;
@@ -58,5 +64,11 @@ public class MapManager : MonoBehaviour
         }
 
         // TODO: Board Animation. Sine wave maybe?
+    }
+
+    public bool IsCoordContainedInMap(Coord coord)
+    {
+        return  0 <= coord.x && coord.x < MapWidth &&
+                0 <= coord.y && coord.y < MapHeight;
     }
 }

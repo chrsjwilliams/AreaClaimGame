@@ -26,6 +26,12 @@ public class Piece
         get { return _tiles; }
     }
 
+    private Tile _centerTile;
+    public Tile CenterTile
+    {
+        get { return _centerTile; }
+    }
+
     protected static int[,,] piece = new int[6, 3, 3]
     { 
         //  ###
@@ -83,13 +89,13 @@ public class Piece
 
     public void MakePhysicalPiece()
     {
-        _holder = GameObject.Instantiate(Services.Prefabs.PieceHolder, Services.GameScene.transform).GetComponent<PieceHolder>();
-        _holder.transform.position = Vector3.zero;
+        _holder = GameObject.Instantiate(Services.Prefabs.PieceHolder, Services.MapManager.TileMapHolder.transform).GetComponent<PieceHolder>();
+        _holder.transform.position = new Vector3(0, 0, -8);
         _holder.gameObject.name = "Player " + (Owner.PlayerNumber + 1) + " Piece Holder";
         //_holder.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
         _holder.Init(this);
 
-        bool centralTile;
+        bool isCentralTile = false;
         int tileStrength;
         string pieceName;
         for (int x = 0; x < 3; x++)
@@ -97,12 +103,17 @@ public class Piece
             for (int y = 0; y < 3; y++)
             {
                 if(piece[_index, x, y] == 1)
-                {
-                    centralTile = x == 1 && y == 1 ? true : false;
-                    tileStrength = centralTile ? Strength + 1 : Strength;  
+                {                    
                     Tile newTile = MonoBehaviour.Instantiate(Services.Prefabs.PlayerTile, _holder.transform);
+                    if (x == 1 && y == 1)
+                    {
+                        _centerTile = newTile;
+                        isCentralTile = true;
+                    }
+                    tileStrength = isCentralTile ? Strength + 1 : Strength;
+
                     Coord newCoord = new Coord(x-1, y-1);
-                    newTile.Init(newCoord, Owner,tileStrength, centralTile);
+                    newTile.Init(newCoord, Owner,tileStrength, isCentralTile);
                     pieceName = newTile.name.Replace("(Clone)", "");
                     newTile.name = pieceName;
 
@@ -110,5 +121,6 @@ public class Piece
                 }
             }
         }
+
     }
 }

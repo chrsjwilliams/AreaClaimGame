@@ -10,15 +10,15 @@ public class MapTile : MonoBehaviour
         get { return _coord; }
     }
 
-    private Player _occupant;
-    public Player Occupant
+    private Tile _occupyingTile;
+    public Tile OccupyingTile
     {
-        get { return _occupant; }
+        get { return _occupyingTile; }
     }
 
     public bool isOccupied
     {
-        get { return Occupant != null; }
+        get { return OccupyingTile != null; }
     }
 
     private SpriteRenderer _spriteRenderer;

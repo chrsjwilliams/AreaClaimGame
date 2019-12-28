@@ -11,17 +11,9 @@ public class Tile : MonoBehaviour
         get { return _owner; }
     }
 
-    private Coord _piecePos;
-    public Coord PiecePos
-    {
-        get { return _piecePos; }
-    }
+    public Coord relativeCoord;
 
-    private Coord _coord;
-    public Coord Coord
-    {
-        get { return _coord; }
-    }
+    public Coord coord;
 
     private bool _isCentralTile;
     public bool IsCentralTile
@@ -34,12 +26,11 @@ public class Tile : MonoBehaviour
     {
         get { return _strength; }
     }
-    public Coord relativeCoord;
     private SpriteRenderer _spriteRenderer;
 
     public void Init(Coord pos,  Player player,int str, bool central)
     {
-        _piecePos = pos;
+        relativeCoord = pos;
         _owner = player;
         transform.localPosition = new Vector2(pos.x, pos.y);
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -49,10 +40,10 @@ public class Tile : MonoBehaviour
         
     }
 
-    public void SetCoord(Coord coord) { _coord = coord; }
-    public void SetCoord(IntVector2 coord) { _coord = new Coord(coord.x, coord.y); }
-    public void SetCoord(Vector2 coord) { _coord = new Coord((int)coord.x, (int)coord.y); }
-    public void SetCoord(int x, int y) { _coord = new Coord(x, y); }
+    public void SetCoord(Coord _coord) { coord = _coord; }
+    public void SetCoord(IntVector2 _coord) { coord = new Coord(_coord.x, _coord.y); }
+    public void SetCoord(Vector2 _coord) { coord = new Coord((int)_coord.x, (int)_coord.y); }
+    public void SetCoord(int x, int y) { coord = new Coord(x, y); }
 
     // Start is called before the first frame update
     void Start()
