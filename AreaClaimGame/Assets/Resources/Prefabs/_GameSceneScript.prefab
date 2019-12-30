@@ -73,6 +73,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7aff1b530561e244a8efb472799bbc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHandSize: 3
+  startingHandSize: 3
+  handOffset: {x: -3.5, y: 0.5, z: 0}
+  handSpacing: {x: 3, y: 0}
+  piecesPerHandRow: 3
 --- !u!1 &1690746812594309800
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,3 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7aff1b530561e244a8efb472799bbc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHandSize: 3
+  startingHandSize: 3
+  handOffset: {x: -3.5, y: 1, z: 0}
+  handSpacing: {x: 3, y: 0}
+  piecesPerHandRow: 3

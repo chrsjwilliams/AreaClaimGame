@@ -4,35 +4,19 @@ using UnityEngine;
 
 public class Piece
 {
-    private Player _owner;
-    public Player Owner
-    {
-        get { return _owner; }
-    }
-
-    private PieceHolder _holder;
+    public Player owner { get; private set;}
+    public PieceHolder holder { get; private set; }
 
     private int _index;
+    public int strength { get; private set; }
 
-    private int _strength;
-    public int Strength
-    {
-        get { return _strength; }
-    }
+    public List<Tile> tiles { get ; private set; }
+    public Tile centerTile { get; private set; }
 
-    private List<Tile> _tiles = new List<Tile>();
-    public List<Tile> Tiles
-    {
-        get { return _tiles; }
-    }
+    public bool selected;
+    public bool burningFromHand { get; private set; }
 
-    private Tile _centerTile;
-    public Tile CenterTile
-    {
-        get { return _centerTile; }
-    }
-
-    protected static int[,,] piece = new int[6, 3, 3]
+    public static int[,,] piece = new int[6, 3, 3]
     { 
         //  ###
         {
@@ -79,21 +63,19 @@ public class Piece
         }
     };
 
-    public Piece(int index, Player player, int strength)
+    public Piece(int index, Player player, int _strength)
     {
         _index = index;
-        _owner = player;
-        _strength = strength;
-
+        owner = player;
+        strength = strength;
+        tiles = new List<Tile>();
     }
 
     public void MakePhysicalPiece()
     {
-        _holder = GameObject.Instantiate(Services.Prefabs.PieceHolder, Services.MapManager.TileMapHolder.transform).GetComponent<PieceHolder>();
-        _holder.transform.position = new Vector3(0, 0, -8);
-        _holder.gameObject.name = "Player " + (Owner.PlayerNumber + 1) + " Piece Holder";
-        //_holder.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
-        _holder.Init(this);
+        holder = GameObject.Instantiate(Services.Prefabs.PieceHolder, Services.MapManager.TileMapHolder.transform).GetComponent<PieceHolder>();
+        holder.gameObject.name = "Player " + (owner.playerNum + 1) + " Piece Holder";
+        holder.Init(this);
 
         bool isCentralTile = false;
         int tileStrength;
@@ -104,23 +86,37 @@ public class Piece
             {
                 if(piece[_index, x, y] == 1)
                 {                    
-                    Tile newTile = MonoBehaviour.Instantiate(Services.Prefabs.PlayerTile, _holder.transform);
+                    Tile newTile = MonoBehaviour.Instantiate(Services.Prefabs.PlayerTile, holder.transform);
                     if (x == 1 && y == 1)
                     {
-                        _centerTile = newTile;
+                        centerTile = newTile;
                         isCentralTile = true;
                     }
-                    tileStrength = isCentralTile ? Strength + 1 : Strength;
-
+                    tileStrength = isCentralTile ? strength + 1 : strength;
                     Coord newCoord = new Coord(x-1, y-1);
-                    newTile.Init(newCoord, Owner,tileStrength, isCentralTile);
+                    newTile.Init(newCoord, owner,tileStrength, isCentralTile);
                     pieceName = newTile.name.Replace("(Clone)", "");
                     newTile.name = pieceName;
 
-                    _tiles.Add(newTile);
+                    tiles.Add(newTile);
                 }
             }
         }
+    }
 
+    public virtual void DestroyPiece()
+    {
+        holder.RemoveAllInputEvents();
+        foreach (Tile tile in tiles) tile.OnRemove();
+        GameObject.Destroy(holder);
+
+    }
+
+    public void BurnFromHand()
+    {
+        holder.HideFromInput();
+        // Burn Task to move piece off screen and fade it
+        burningFromHand = true;
+        foreach (Tile tile in tiles) tile.OnRemove();
     }
 }

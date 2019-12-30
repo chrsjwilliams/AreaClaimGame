@@ -13,17 +13,11 @@ public class PieceHolder : MonoBehaviour
     private int _touchID;
     private SpriteRenderer _spriteRenderer;
 
-    private bool _placed;
-    public bool Placed
-    {
-        get { return _placed; }
-    }
+    public bool placed { get; private set; }
 
-    private Piece _piece;
-    public Piece Piece
-    {
-        get { return _piece; }
-    }
+    public Piece piece {get; private set; }
+
+
 
     public Coord centerCoord;
     protected Queue<Coord> lastPositions;
@@ -31,13 +25,20 @@ public class PieceHolder : MonoBehaviour
     private const int leniencyFrames = 5;
     protected readonly Vector3 baseDragOffset = 0.1f * Vector3.up;
 
-    public void Init(Piece piece)
+    private Vector2 unselecetdScale = new Vector2(0.66f, 0.66f);
+    private Vector2 selecetedScale = new Vector2(0.85f, 0.85f);
+    private Vector2 placedScale = new Vector2(1, 1);
+
+    public void Init(Piece piece_)
     {
+        transform.position = new Vector3(0, 0, -8);
+
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _piece = piece;
-        _placed = false;
+        piece = piece_;
+        placed = false;
         ListenforInput();
         lastPositions = new Queue<Coord>();
+        transform.localScale = unselecetdScale;
 
     }
 
@@ -46,6 +47,25 @@ public class PieceHolder : MonoBehaviour
         Services.EventManager.Register<TouchDown>(OnTouchDown);
         Services.EventManager.Register<MouseDown>(OnMouseDownEvent);
         _touchID = -1;
+    }
+
+    public void HideFromInput()
+    {
+        Services.EventManager.Unregister<TouchDown>(OnTouchDown);
+        Services.EventManager.Unregister<MouseDown>(OnMouseDownEvent);
+    }
+
+    public void RemoveAllInputEvents()
+    {
+        Services.EventManager.Unregister<MouseDown>(OnMouseDownEvent);
+        Services.EventManager.Unregister<TouchDown>(OnTouchDown);
+
+        Services.EventManager.Unregister<MouseMove>(OnMouseMoveEvent);
+        Services.EventManager.Unregister<TouchMove>(OnTouchMove);
+
+        Services.EventManager.Unregister<MouseUp>(OnMouseUpEvent);
+        Services.EventManager.Unregister<TouchUp>(OnTouchUp);
+
     }
 
     protected virtual bool IsPointContaintedWithinSprite(Vector2 point)
@@ -62,16 +82,16 @@ public class PieceHolder : MonoBehaviour
     public Vector3 GetCenterpoint(bool centerTile = false)
     {
         Vector3 centerPos = Vector3.zero;
-        foreach (Tile tile in Piece.Tiles)
+        foreach (Tile tile in piece.tiles)
         {
             centerPos += tile.transform.localPosition;
         }
-        centerPos /= Piece.Tiles.Count;
+        centerPos /= piece.tiles.Count;
         if (centerTile)
         {
             Tile closestTile = null;
             float closestDistance = Mathf.Infinity;
-            foreach (Tile tile in Piece.Tiles)
+            foreach (Tile tile in piece.tiles)
             {
                 float dist = Vector3.Distance(tile.transform.localPosition, centerPos);
                 if (dist < closestDistance)
@@ -89,15 +109,13 @@ public class PieceHolder : MonoBehaviour
     {
        if (centered) pos -= GetCenterpoint();
         transform.position = pos;
-        Debug.Log("T: " + transform.position);
-
     }
 
     public void SetTileCoords(Vector3 centerPos)
     {
 
         centerCoord = new Coord(Mathf.RoundToInt(centerPos.x), Mathf.RoundToInt(centerPos.y));
-        foreach (Tile tile in Piece.Tiles)
+        foreach (Tile tile in piece.tiles)
         {
             tile.SetCoord(tile.relativeCoord.Add(centerCoord));
         }
@@ -120,7 +138,7 @@ public class PieceHolder : MonoBehaviour
     public bool IsPlacementLegal(Coord centerCoord)
     {
         List<Coord> hypotheticalTileCoords = new List<Coord>();
-        foreach (Tile tile in Piece.Tiles)
+        foreach (Tile tile in piece.tiles)
         {
             hypotheticalTileCoords.Add(tile.coord);
         }
@@ -148,19 +166,20 @@ public class PieceHolder : MonoBehaviour
     {
         OnPlace();
         PlaceAtLocation(centerCoord);
-        _placed = true;
+        placed = true;
         
     }
 
     public void OnPlace()
     {
-        foreach(Tile tile in Piece.Tiles)
+        transform.localScale = placedScale;
+        foreach(Tile tile in piece.tiles)
         {
             MapTile mapTile = Services.MapManager.Map[tile.coord.x, tile.coord.y];
 
         }
-        if(!Placed)
-        Services.EventManager.Fire(new PlayMade(Piece));
+        if(!placed)
+        Services.EventManager.Fire(new PlayMade(piece));
     }
 
     protected void OnTouchDown(TouchDown e)
@@ -184,15 +203,20 @@ public class PieceHolder : MonoBehaviour
 
     protected void OnInputDown()
     {
+        if (!Services.GameScene.gameOver && !placed)
+        {
+            transform.localScale = selecetedScale;
+            piece.owner.OnPieceSelected(piece);
 
-        Services.EventManager.Unregister<TouchDown>(OnTouchDown);
-        Services.EventManager.Unregister<MouseDown>(OnMouseDownEvent);
+            Services.EventManager.Unregister<TouchDown>(OnTouchDown);
+            Services.EventManager.Unregister<MouseDown>(OnMouseDownEvent);
 
-        Services.EventManager.Register<TouchMove>(OnTouchMove);
-        Services.EventManager.Register<MouseMove>(OnMouseMoveEvent);
+            Services.EventManager.Register<TouchMove>(OnTouchMove);
+            Services.EventManager.Register<MouseMove>(OnMouseMoveEvent);
 
-        Services.EventManager.Register<TouchUp>(OnTouchUp);
-        Services.EventManager.Register<MouseUp>(OnMouseUpEvent);
+            Services.EventManager.Register<TouchUp>(OnTouchUp);
+            Services.EventManager.Register<MouseUp>(OnMouseUpEvent);
+        }
 
     }
 
@@ -211,7 +235,7 @@ public class PieceHolder : MonoBehaviour
 
     protected void OnInputDrag(Vector2 inputPos)
     {
-        if (!Placed)
+        if (!placed)
         {
             Vector3 screenInputPos = Services.GameManager.MainCamera.WorldToScreenPoint(inputPos);
             float mapEdgeScreenHeight = Services.CameraController.GetMapEdgeScreenHeight();
@@ -247,7 +271,7 @@ public class PieceHolder : MonoBehaviour
 
     protected void OnInputUp()
     {
-        if (!Placed)
+        if (!placed)
         {
             // piece snapping
         }
@@ -255,6 +279,12 @@ public class PieceHolder : MonoBehaviour
         {
             PlaceAtCurrentLocation();
             Debug.Log("Placed");
+        }
+        else
+        {
+            piece.owner.CancelSelectedPiece();
+            transform.localScale = unselecetdScale;
+            placed = false;
         }
 
         

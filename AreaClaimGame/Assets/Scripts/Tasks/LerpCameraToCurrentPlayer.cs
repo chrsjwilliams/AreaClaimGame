@@ -15,7 +15,7 @@ public class LerpCameraToCurrentPlayer : Task
     public LerpCameraToCurrentPlayer()
     {
         startPos = Services.GameManager.MainCamera.transform.position;
-        targetPos = Services.GameScene.cameraPositions[Services.GameScene.CurrentPlayer.PlayerNumber];
+        targetPos = Services.GameScene.cameraPositions[Services.GameScene.CurrentPlayer.playerNum];
 
     }
 

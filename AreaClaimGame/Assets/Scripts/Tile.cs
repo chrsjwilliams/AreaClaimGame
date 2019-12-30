@@ -5,38 +5,26 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
 
-    private Player _owner;
-    public Player Owner
-    {
-        get { return _owner; }
-    }
+    public Player owner{ get; private set; }
 
     public Coord relativeCoord;
 
     public Coord coord;
 
-    private bool _isCentralTile;
-    public bool IsCentralTile
-    {
-        get { return _isCentralTile; }
-    }
+    public bool isCentralTile{ get; private set; }
 
-    private int _strength;
-    public int Strength
-    {
-        get { return _strength; }
-    }
+    public int strength { get; private set; }
     private SpriteRenderer _spriteRenderer;
 
     public void Init(Coord pos,  Player player,int str, bool central)
     {
         relativeCoord = pos;
-        _owner = player;
+        owner = player;
         transform.localPosition = new Vector2(pos.x, pos.y);
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _strength = str;
-        _isCentralTile = central;
-        _spriteRenderer.color = Services.GameScene.players[Owner.PlayerNumber].ColorScheme[Strength - 1];
+        strength = str;
+        isCentralTile = central;
+        _spriteRenderer.color = Services.GameScene.players[owner.playerNum].colorScheme[strength];
         
     }
 
@@ -45,6 +33,11 @@ public class Tile : MonoBehaviour
     public void SetCoord(Vector2 _coord) { coord = new Coord((int)_coord.x, (int)_coord.y); }
     public void SetCoord(int x, int y) { coord = new Coord(x, y); }
 
+
+    public void OnRemove()
+    {
+
+    }
     // Start is called before the first frame update
     void Start()
     {

@@ -48,13 +48,14 @@ public class GameSceneScript : Scene<TransitionData>
     {
         Services.GameScene = this;
         gameOver = false;
-        for(int i = 0; i < players.Length; i++)
+        Services.MapManager.GenerateMap();
+        Services.CameraController.SetScreenEdges();
+
+        for (int i = 0; i < players.Length; i++)
         {
             players[i].Init(i, false);
         }
         _turnNumber = 0;
-        Services.CameraController.SetScreenEdges();
-        Services.MapManager.GenerateMap();
         _currentPlayer = players[0];
         Services.EventManager.Register<PlayMade>(OnPlayMade);
         _currentPlayer = players[0];
@@ -101,7 +102,7 @@ public class GameSceneScript : Scene<TransitionData>
 
         if (Input.GetKeyDown(KeyCode.M))
         {
-            Piece p = new Piece(0, players[CurrentPlayer.PlayerNumber], 1);
+            Piece p = new Piece(0, players[CurrentPlayer.playerNum], 1);
             p.MakePhysicalPiece();
         }
 	}
