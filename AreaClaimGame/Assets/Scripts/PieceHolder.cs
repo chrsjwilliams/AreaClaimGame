@@ -25,9 +25,9 @@ public class PieceHolder : MonoBehaviour
     private const int leniencyFrames = 5;
     protected readonly Vector3 baseDragOffset = 0.1f * Vector3.up;
 
-    private Vector2 unselecetdScale = new Vector2(0.66f, 0.66f);
-    private Vector2 selecetedScale = new Vector2(0.85f, 0.85f);
-    private Vector2 placedScale = new Vector2(1, 1);
+    public static Vector2 unselecetdScale = new Vector2(0.66f, 0.66f);
+    public static Vector2 selecetedScale = new Vector2(0.85f, 0.85f);
+    public static Vector2 placedScale = new Vector2(1, 1);
 
     public void Init(Piece piece_)
     {
@@ -178,8 +178,11 @@ public class PieceHolder : MonoBehaviour
             MapTile mapTile = Services.MapManager.Map[tile.coord.x, tile.coord.y];
 
         }
-        if(!placed)
-        Services.EventManager.Fire(new PlayMade(piece));
+        if (!placed)
+        {
+            piece.owner.OnPiecePlaced(piece);
+            Services.EventManager.Fire(new PlayMade(piece));
+        }
     }
 
     protected void OnTouchDown(TouchDown e)

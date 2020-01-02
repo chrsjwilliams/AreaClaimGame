@@ -13,7 +13,7 @@ public class GameSceneScript : Scene<TransitionData>
     public const int LEFT_CLICK = 0;
     public const int RIGHT_CLICK = 1;
 
-    TaskManager _tm = new TaskManager();
+    public TaskManager taskManager = new TaskManager();
 
     private int _turnNumber;
     public int TurnNumber
@@ -59,7 +59,7 @@ public class GameSceneScript : Scene<TransitionData>
         _currentPlayer = players[0];
         Services.EventManager.Register<PlayMade>(OnPlayMade);
         _currentPlayer = players[0];
-        _tm.Do(new LerpCameraToCurrentPlayer());
+        taskManager.Do(new LerpCameraToCurrentPlayer());
     }
 
 
@@ -78,7 +78,7 @@ public class GameSceneScript : Scene<TransitionData>
 
     public void SceneTransition()
     {
-        _tm.Do
+        taskManager.Do
         (
             new ActionTask(SwapScene)
         );
@@ -98,7 +98,7 @@ public class GameSceneScript : Scene<TransitionData>
 	// Update is called once per frame
 	void Update ()
     {
-        _tm.Update();
+        taskManager.Update();
 
         if (Input.GetKeyDown(KeyCode.M))
         {
@@ -109,9 +109,17 @@ public class GameSceneScript : Scene<TransitionData>
 
     public void OnPlayMade(PlayMade play)
     {
+        TaskQueue playMadeTasks = new TaskQueue();
+        players[TurnNumber % players.Length].OrganizeHand(players[TurnNumber % players.Length].hand);
+        playMadeTasks.Add(new ParameterizedActionTask<Vector3>(
+                                players[TurnNumber % players.Length].DrawPieceTask,
+                                players[TurnNumber % players.Length].pieceSpawnPosition.position));
+
         _turnNumber++;
         _currentPlayer = players[TurnNumber % players.Length];
 
-        _tm.Do(new LerpCameraToCurrentPlayer());
+        
+        playMadeTasks.Add(new LerpCameraToCurrentPlayer());
+        taskManager.Do(playMadeTasks);
     }
 }

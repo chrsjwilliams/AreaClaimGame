@@ -119,4 +119,9 @@ public class Piece
         burningFromHand = true;
         foreach (Tile tile in tiles) tile.OnRemove();
     }
+
+    public void OnDrawn()
+    {
+        holder.ListenforInput();
+    }
 }

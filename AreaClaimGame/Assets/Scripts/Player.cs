@@ -18,13 +18,14 @@ public class Player : MonoBehaviour
     public Vector2 handSpacing;
     public int piecesPerHandRow = 1;
     public List<Piece> hand;
-    protected List<Vector3> handTargetPositions;
+    public Vector3[] handTargetPositions;
     public Piece selectedPiece;
-    private int selectedPieceHandPos;
+    public int selectedPieceHandPos;
 
     private ShuffleBag<Piece> _pieceDeck;
 
     public List<Piece> boardPieces { get; protected set; }
+    public Transform pieceSpawnPosition;
 
     public void Init(int playerNumber, bool isAI)
     {
@@ -41,8 +42,9 @@ public class Player : MonoBehaviour
         hand = new List<Piece>();
         boardPieces = new List<Piece>();
         InitDeck();
-        DrawPieces(startingHandSize);
+        DrawPieces(startingHandSize, pieceSpawnPosition.position, true);
         OrganizeHand(hand, true);
+        
     }  
 
     private void InitDeck()
@@ -56,7 +58,7 @@ public class Player : MonoBehaviour
         }    
     }
 
-    public void DrawPieces(int numPiecesToDraw)
+    public void DrawPieces(int numPiecesToDraw, Vector3 startPos, bool instantly = false)
     {
         int handSpace = maxHandSize - hand.Count;
         if (selectedPiece != null) handSpace -= 1;
@@ -67,9 +69,11 @@ public class Player : MonoBehaviour
         }
         for(int i = 0; i < numPiecesToDraw; i++)
         {
-            DrawPiece();
+            DrawPiece(startPos, instantly);
         }
     }
+
+
 
     public virtual void DrawPiece(Piece piece)
     {
@@ -77,15 +81,39 @@ public class Player : MonoBehaviour
         AddPieceToHand(piece);
     }
 
-    public virtual void DrawPiece()
+    public virtual void DrawPieceTask(Vector3 startPos)
     {
         Piece piece = _pieceDeck.Next();
-        DrawPiece(piece);
+        Task drawTask = new DrawNewPiece(piece, startPos, this);
+        Services.GameScene.taskManager.Do(drawTask);
+        QueueUpNextPiece();
+    }
+
+    public virtual void DrawPiece(Vector3 startPos, bool instantly = false)
+    {
+        Piece piece = _pieceDeck.Next();
+
+        if (instantly)
+        {
+            DrawPiece(piece);
+        }
+        else
+        {
+            Task drawTask = new DrawNewPiece(piece, startPos, this);
+            Services.GameScene.taskManager.Do(drawTask);
+            QueueUpNextPiece();
+        }
     }
 
     public void AddPieceToHand(Piece piece)
     {
         hand.Add(piece);
+        OrganizeHand(hand);
+    }
+
+    public void InsertPieceIntoHand(Piece piece, int index)
+    {
+        hand.Insert(index, piece);
         OrganizeHand(hand);
     }
 
@@ -108,27 +136,25 @@ public class Player : MonoBehaviour
 
     public void OrganizeHand(List<Piece> heldPieces, bool instant = false)
     {
-        int provisionalHandCount = heldPieces.Count;
         bool emptySpace = false;
         if(selectedPiece != null)
         {
-            provisionalHandCount += 1;
             emptySpace = true;
         }
-        handTargetPositions = new List<Vector3>();
-        for(int i =0; i < provisionalHandCount; i++)
+        handTargetPositions = new Vector3[maxHandSize];
+        for(int i = 0; i < maxHandSize; i++)
         {
             int handPos = i;
-            if(emptySpace && 1> selectedPieceHandPos)
+            if(emptySpace && 1 > selectedPieceHandPos)
             {
                 handPos -= 1;
             }
-            if(!emptySpace || (emptySpace && i != selectedPieceHandPos))
-            {
+           
                 Vector3 newPos = GetHandPosition(i);
                 if (instant) heldPieces[handPos].holder.Reposition(newPos, true);
-                handTargetPositions.Add(newPos);
-            }
+                handTargetPositions[i] = newPos;
+
+            
         }
     }
 
@@ -162,6 +188,7 @@ public class Player : MonoBehaviour
             if(hand[i] == selectedPiece)
             {
                 selectedPieceHandPos = i;
+                Debug.Log(i);
                 break;
             }
         }
@@ -174,11 +201,17 @@ public class Player : MonoBehaviour
     {
         if (selectedPiece == null) return;
 
-        int handPosToPlace = Mathf.Min(selectedPieceHandPos, hand.Count);
+        int handPosToPlace = selectedPieceHandPos;
         hand.Insert(handPosToPlace, selectedPiece);
         selectedPiece = null;
         OrganizeHand(hand);
-        hand.Insert(handPosToPlace, selectedPiece);
+    }
+
+    public virtual void OnPiecePlaced(Piece piece)
+    {
+        selectedPiece = null;
+        OrganizeHand(hand);
+
     }
 
     // Update is called once per frame
