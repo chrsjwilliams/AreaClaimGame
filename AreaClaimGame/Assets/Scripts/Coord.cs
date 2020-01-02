@@ -4,6 +4,8 @@ using System.Collections;
 [System.Serializable]
 public struct Coord
 {
+
+    public static Coord Zero = new Coord(0, 0);
     public int x;
     public int y;
 

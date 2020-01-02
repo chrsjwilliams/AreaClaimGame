@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
         Piece[] pieceExamples = new Piece[Piece.piece.GetLength(0)];
         for(int i = 0; i < Piece.piece.GetLength(0); i++)
         {
-            pieceExamples[i] = new Piece(i, this, 1);
+            pieceExamples[i] = new Piece(i, this, 0);
             _pieceDeck.Add(pieceExamples[i], 1);
         }    
     }
@@ -96,7 +96,6 @@ public class Player : MonoBehaviour
 
     public virtual void DrawPiece(Vector3 startPos, bool instantly = false)
     {
-        Debug.Log("Duro");
 
         Piece piece = _pieceDeck.Next();
         DrawPiece(piece);

@@ -77,23 +77,25 @@ public class Piece
         holder.gameObject.name = "Player " + owner.playerNum + " Piece Holder";
         holder.Init(this);
 
-        bool isCentralTile = false;
         int tileStrength;
         string pieceName;
         for (int x = 0; x < 3; x++)
         {
             for (int y = 0; y < 3; y++)
             {
-                if(piece[_index, x, y] == 1)
+                bool isCentralTile = false;
+
+                if (piece[_index, x, y] == 1)
                 {                    
                     Tile newTile = MonoBehaviour.Instantiate(Services.Prefabs.PlayerTile, holder.transform);
-                    if (x == 1 && y == 1)
+    
+                    Coord newCoord = new Coord(x-1, y-1);
+                    if (newCoord.Equals(Coord.Zero))
                     {
                         centerTile = newTile;
                         isCentralTile = true;
                     }
                     tileStrength = isCentralTile ? strength + 1 : strength;
-                    Coord newCoord = new Coord(x-1, y-1);
                     newTile.Init(newCoord, owner,tileStrength, isCentralTile);
                     pieceName = newTile.name.Replace("(Clone)", "");
                     newTile.name = pieceName;
