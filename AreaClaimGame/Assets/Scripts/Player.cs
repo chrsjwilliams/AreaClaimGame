@@ -27,10 +27,12 @@ public class Player : MonoBehaviour
     public List<Piece> boardPieces { get; protected set; }
     public Transform pieceSpawnPosition;
 
+    public TaskManager tm = new TaskManager();
+
     public void Init(int playerNumber, bool isAI)
     {
         playerNum = playerNumber;
-        if (this.playerNum == 0)
+        if (this.playerNum == 1)
         {
             colorScheme = Services.GameManager.Player1ColorScheme;
         }
@@ -77,36 +79,34 @@ public class Player : MonoBehaviour
 
     public virtual void DrawPiece(Piece piece)
     {
+        if (hand.Count >= maxHandSize) return;
         piece.MakePhysicalPiece();
         AddPieceToHand(piece);
     }
 
     public virtual void DrawPieceTask(Vector3 startPos)
     {
+        Debug.Log("Task!");
+        if (hand.Count >= maxHandSize) return;
         Piece piece = _pieceDeck.Next();
         Task drawTask = new DrawNewPiece(piece, startPos, this);
-        Services.GameScene.taskManager.Do(drawTask);
+        tm.Do(drawTask);
         QueueUpNextPiece();
     }
 
     public virtual void DrawPiece(Vector3 startPos, bool instantly = false)
     {
-        Piece piece = _pieceDeck.Next();
+        Debug.Log("Duro");
 
-        if (instantly)
-        {
-            DrawPiece(piece);
-        }
-        else
-        {
-            Task drawTask = new DrawNewPiece(piece, startPos, this);
-            Services.GameScene.taskManager.Do(drawTask);
-            QueueUpNextPiece();
-        }
+        Piece piece = _pieceDeck.Next();
+        DrawPiece(piece);
+        
+   
     }
 
     public void AddPieceToHand(Piece piece)
     {
+
         hand.Add(piece);
         OrganizeHand(hand);
     }
@@ -121,6 +121,18 @@ public class Player : MonoBehaviour
     {
         piece.BurnFromHand();
         hand.Remove(piece);
+    }
+
+    public virtual void LockHand(bool isLocked)
+    {
+        if (isLocked)
+        {
+            foreach (Piece piece in hand) piece.holder.HideFromInput();
+        }
+        else
+        {
+            foreach (Piece piece in hand) piece.holder.ListenforInput();
+        }
     }
 
     private void QueueUpNextPiece()
@@ -162,13 +174,13 @@ public class Player : MonoBehaviour
     {
         Vector3 offset = handOffset;
         float spacingMultiplier = 1;
-        if(playerNum == 1)
+        if(playerNum == 2)
         {
             spacingMultiplier = -1;
             offset = new Vector3(-handOffset.x, -handOffset.y, handOffset.z);
         }
 
-        offset += Services.CameraController.screenEdges[playerNum];
+        offset += Services.CameraController.screenEdges[playerNum - 1];
         offset = new Vector3(offset.x, offset.y, 0);
 
         Vector3 newPos = new Vector3(handSpacing.x * (handIndex % piecesPerHandRow) * spacingMultiplier,
@@ -188,7 +200,6 @@ public class Player : MonoBehaviour
             if(hand[i] == selectedPiece)
             {
                 selectedPieceHandPos = i;
-                Debug.Log(i);
                 break;
             }
         }
@@ -200,26 +211,25 @@ public class Player : MonoBehaviour
     public virtual void CancelSelectedPiece()
     {
         if (selectedPiece == null) return;
-
+        Debug.Log(hand.Count);
         int handPosToPlace = selectedPieceHandPos;
         hand.Insert(handPosToPlace, selectedPiece);
+        Debug.Log(hand.Count);
         selectedPiece = null;
-        OrganizeHand(hand);
+        OrganizeHand(hand, true);
     }
 
     public virtual void OnPiecePlaced(Piece piece)
     {
+
         selectedPiece = null;
         OrganizeHand(hand);
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I) && playerNum == 0)
-        {
-            hand[0].holder.Reposition(Vector3.zero, true);
-        }
+        tm.Update();
     }
 }

@@ -15,29 +15,15 @@ public class GameSceneScript : Scene<TransitionData>
 
     public TaskManager taskManager = new TaskManager();
 
-    private int _turnNumber;
-    public int TurnNumber
-    {
-        get { return _turnNumber; }
-    }
+    public int turnNumber{ get; private set; }
 
     public Player[] players;
-    private Player _currentPlayer;
-    public Player CurrentPlayer
-    {
-        get { return _currentPlayer; }
-    }
+    public Player currentPlayer { get; private set; }
 
-    public readonly Vector3[] cameraPositions = { new Vector3(2, 2, -10), new Vector3(2, 4, -10), new Vector3(2, 3, -10) };
+    public readonly Vector3[] cameraPositions = { new Vector3(2, 1.25f, -10), new Vector3(2, 5f, -10), new Vector3(2, 3, -10) };
     private float panSpeed = 3f;
 
-    private int _touchID;
-    public int TouchID
-    {
-        get { return _touchID; }
-    }
-
-    float t = 0;
+    public int touchID { get; private set; }
 
     private void Start()
     {
@@ -53,12 +39,11 @@ public class GameSceneScript : Scene<TransitionData>
 
         for (int i = 0; i < players.Length; i++)
         {
-            players[i].Init(i, false);
+            players[i].Init(i + 1, false);
         }
-        _turnNumber = 0;
-        _currentPlayer = players[0];
+        turnNumber = 0;
+        currentPlayer = players[0];
         Services.EventManager.Register<PlayMade>(OnPlayMade);
-        _currentPlayer = players[0];
         taskManager.Do(new LerpCameraToCurrentPlayer());
     }
 
@@ -99,27 +84,23 @@ public class GameSceneScript : Scene<TransitionData>
 	void Update ()
     {
         taskManager.Update();
-
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            Piece p = new Piece(0, players[CurrentPlayer.playerNum], 1);
-            p.MakePhysicalPiece();
-        }
 	}
 
     public void OnPlayMade(PlayMade play)
     {
         TaskQueue playMadeTasks = new TaskQueue();
-        players[TurnNumber % players.Length].OrganizeHand(players[TurnNumber % players.Length].hand);
+        playMadeTasks.Add(new ParameterizedActionTask<Boolean>(currentPlayer.LockHand, true));
         playMadeTasks.Add(new ParameterizedActionTask<Vector3>(
-                                players[TurnNumber % players.Length].DrawPieceTask,
-                                players[TurnNumber % players.Length].pieceSpawnPosition.position));
+                                currentPlayer.DrawPieceTask,
+                                currentPlayer.pieceSpawnPosition.position));
 
-        _turnNumber++;
-        _currentPlayer = players[TurnNumber % players.Length];
+        turnNumber++;
+        currentPlayer = players[turnNumber % players.Length];
 
         
         playMadeTasks.Add(new LerpCameraToCurrentPlayer());
+        playMadeTasks.Add(new ParameterizedActionTask<Boolean>(currentPlayer.LockHand, false));
+
         taskManager.Do(playMadeTasks);
     }
 }

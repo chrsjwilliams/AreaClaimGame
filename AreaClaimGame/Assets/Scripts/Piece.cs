@@ -74,7 +74,7 @@ public class Piece
     public void MakePhysicalPiece()
     {
         holder = GameObject.Instantiate(Services.Prefabs.PieceHolder, Services.MapManager.TileMapHolder.transform).GetComponent<PieceHolder>();
-        holder.gameObject.name = "Player " + (owner.playerNum + 1) + " Piece Holder";
+        holder.gameObject.name = "Player " + owner.playerNum + " Piece Holder";
         holder.Init(this);
 
         bool isCentralTile = false;

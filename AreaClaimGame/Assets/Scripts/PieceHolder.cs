@@ -180,6 +180,7 @@ public class PieceHolder : MonoBehaviour
         }
         if (!placed)
         {
+            transform.name = "Player " + piece.owner.playerNum + "| X: " + centerCoord.x + ", Y: " + centerCoord.y; 
             piece.owner.OnPiecePlaced(piece);
             Services.EventManager.Fire(new PlayMade(piece));
         }
@@ -191,7 +192,7 @@ public class PieceHolder : MonoBehaviour
         if (IsPointContaintedWithinSprite(touchWorldPos) && _touchID == -1)
         {
             _touchID = e.touch.fingerId;
-            OnInputDown();
+            OnInputDown(touchWorldPos);
         }
     }
 
@@ -200,14 +201,24 @@ public class PieceHolder : MonoBehaviour
         Vector2 mouseWorldPos = Services.GameManager.MainCamera.ScreenToWorldPoint(e.mousePos);
         if (IsPointContaintedWithinSprite(mouseWorldPos))
         {
-            OnInputDown();
+            OnInputDown(mouseWorldPos);
         }
     }
 
-    protected void OnInputDown()
+    protected void OnInputDown(Vector2 inputPos)
     {
         if (!Services.GameScene.gameOver && !placed)
         {
+            Vector3 screenInputPos = Services.GameManager.MainCamera.WorldToScreenPoint(inputPos);
+            float mapEdgeScreenHeight = Services.CameraController.GetMapEdgeScreenHeight();
+            Coord roundedInputCoord = new Coord(Mathf.RoundToInt(screenInputPos.x),
+                                                Mathf.RoundToInt(screenInputPos.y));
+            float pieceOffset = mapEdgeScreenHeight * 0.001f;
+
+            Vector3 piecePos = new Vector3(inputPos.x, inputPos.y + pieceOffset, transform.position.z);
+            SetTileCoords(transform.localPosition);
+            Reposition(piecePos);
+
             transform.localScale = selecetedScale;
             piece.owner.OnPieceSelected(piece);
 
@@ -281,10 +292,10 @@ public class PieceHolder : MonoBehaviour
         if(IsPlacementLegal(centerCoord))
         {
             PlaceAtCurrentLocation();
-            Debug.Log("Placed");
         }
         else
         {
+            Debug.Log("Cencelled!");
             piece.owner.CancelSelectedPiece();
             transform.localScale = unselecetdScale;
             placed = false;

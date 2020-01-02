@@ -24,7 +24,7 @@ public class Tile : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         strength = str;
         isCentralTile = central;
-        _spriteRenderer.color = Services.GameScene.players[owner.playerNum].colorScheme[strength];
+        _spriteRenderer.color = Services.GameScene.players[owner.playerNum - 1].colorScheme[strength];
         
     }
 
