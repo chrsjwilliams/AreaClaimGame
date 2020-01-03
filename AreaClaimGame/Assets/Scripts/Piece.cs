@@ -67,7 +67,7 @@ public class Piece
     {
         _index = index;
         owner = player;
-        strength = strength;
+        strength = _strength;
         tiles = new List<Tile>();
     }
 
@@ -96,7 +96,8 @@ public class Piece
                         isCentralTile = true;
                     }
                     tileStrength = isCentralTile ? strength + 1 : strength;
-                    newTile.Init(newCoord, owner,tileStrength, isCentralTile);
+
+                    newTile.Init(newCoord, owner, this,tileStrength, isCentralTile);
                     pieceName = newTile.name.Replace("(Clone)", "");
                     newTile.name = pieceName;
 
@@ -112,6 +113,11 @@ public class Piece
         foreach (Tile tile in tiles) tile.OnRemove();
         GameObject.Destroy(holder);
 
+    }
+
+    public void RemoveTile(Tile tile)
+    {
+        tiles.Remove(tile);
     }
 
     public void BurnFromHand()

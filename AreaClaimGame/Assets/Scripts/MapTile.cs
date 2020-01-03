@@ -37,6 +37,17 @@ public class MapTile : MonoBehaviour
         ListenforInput();
     }
 
+    public void SetOccupyingTile(Tile tile)
+    {
+        //
+        _occupyingTile = tile;
+    }
+
+    public void RemoveOccupyingTile(MapTile mapTile)
+    {
+        mapTile.OccupyingTile.OnRemove();
+    }
+
     public void ListenforInput()
     {
         Services.EventManager.Register<TouchDown>(OnTouchDown);
@@ -76,8 +87,6 @@ public class MapTile : MonoBehaviour
 
     protected void OnInputDown()
     {
-        SpriteRenderer.color = Services.GameScene.currentPlayer.colorScheme[0];
-
 
         Services.EventManager.Unregister<TouchDown>(OnTouchDown);
         Services.EventManager.Unregister<MouseDown>(OnMouseDownEvent);

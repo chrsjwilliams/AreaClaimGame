@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
         Piece[] pieceExamples = new Piece[Piece.piece.GetLength(0)];
         for(int i = 0; i < Piece.piece.GetLength(0); i++)
         {
-            pieceExamples[i] = new Piece(i, this, 0);
+            pieceExamples[i] = new Piece(i, this, 1);
             _pieceDeck.Add(pieceExamples[i], 1);
         }    
     }
@@ -86,7 +86,6 @@ public class Player : MonoBehaviour
 
     public virtual void DrawPieceTask(Vector3 startPos)
     {
-        Debug.Log("Task!");
         if (hand.Count >= maxHandSize) return;
         Piece piece = _pieceDeck.Next();
         Task drawTask = new DrawNewPiece(piece, startPos, this);
@@ -210,10 +209,9 @@ public class Player : MonoBehaviour
     public virtual void CancelSelectedPiece()
     {
         if (selectedPiece == null) return;
-        Debug.Log(hand.Count);
+
         int handPosToPlace = selectedPieceHandPos;
         hand.Insert(handPosToPlace, selectedPiece);
-        Debug.Log(hand.Count);
         selectedPiece = null;
         OrganizeHand(hand, true);
     }

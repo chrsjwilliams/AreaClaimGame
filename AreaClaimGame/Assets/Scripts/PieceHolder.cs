@@ -142,9 +142,19 @@ public class PieceHolder : MonoBehaviour
         {
             hypotheticalTileCoords.Add(tile.coord);
         }
+
+        if (Services.MapManager.Map[centerCoord.x, centerCoord.y].isOccupied &&
+            Services.MapManager.Map[centerCoord.x, centerCoord.y].OccupyingTile.isCentralTile &&
+            Services.MapManager.Map[centerCoord.x, centerCoord.y].OccupyingTile.owner != piece.owner)
+            return false;
+
         foreach (Coord coord in hypotheticalTileCoords)
         {
             if (!Services.MapManager.IsCoordContainedInMap(coord)) return false;
+
+            if (Services.MapManager.Map[coord.x, coord.y].isOccupied &&
+                Services.MapManager.Map[coord.x, coord.y].OccupyingTile.isCentralTile &&
+                !Services.MapManager.Map[coord.x, coord.y].OccupyingTile.CanBeRemoved()) return false;
 
         }
         return true;
@@ -158,6 +168,35 @@ public class PieceHolder : MonoBehaviour
                                 ceneterCoordLocation.y,
                                 transform.position.z));
                                 */
+
+        List<Tile> potentialTilesToRemove = new List<Tile>();
+        foreach (Tile tile in piece.tiles)
+        {
+            if (Services.MapManager.Map[tile.coord.x, tile.coord.y].isOccupied) {
+                Tile currentOccupyingTile = Services.MapManager.Map[tile.coord.x, tile.coord.y].OccupyingTile;
+                int tileStrength = tile.strength;
+                int opposingTileStrength = currentOccupyingTile.strength;
+                tile.ReduceStrength(opposingTileStrength);
+                currentOccupyingTile.ReduceStrength(tileStrength);
+                if (currentOccupyingTile.CanBeRemoved())
+                {
+                    potentialTilesToRemove.Add(currentOccupyingTile);
+                }
+
+                if(tile.strength <= 0)
+                {
+                    potentialTilesToRemove.Add(tile);
+                }
+              
+            }
+            Services.MapManager.Map[tile.coord.x, tile.coord.y].SetOccupyingTile(tile);
+
+        }
+
+        foreach(Tile tile in potentialTilesToRemove)
+        {
+            tile.RemoveTile();
+        }
         transform.localPosition = new Vector3(ceneterCoordLocation.x, ceneterCoordLocation.y, -8);
     }
 
@@ -287,19 +326,19 @@ public class PieceHolder : MonoBehaviour
     {
         if (!placed)
         {
-            // piece snapping
+            if (IsPlacementLegal(centerCoord))
+            {
+                PlaceAtCurrentLocation();
+            }
+            else
+            {
+                Debug.Log("Cencelled!");
+                piece.owner.CancelSelectedPiece();
+                transform.localScale = unselecetdScale;
+                placed = false;
+            }
         }
-        if(IsPlacementLegal(centerCoord))
-        {
-            PlaceAtCurrentLocation();
-        }
-        else
-        {
-            Debug.Log("Cencelled!");
-            piece.owner.CancelSelectedPiece();
-            transform.localScale = unselecetdScale;
-            placed = false;
-        }
+        
 
         
         Services.EventManager.Unregister<TouchMove>(OnTouchMove);
