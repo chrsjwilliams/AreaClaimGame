@@ -143,10 +143,7 @@ public class PieceHolder : MonoBehaviour
             hypotheticalTileCoords.Add(tile.coord);
         }
 
-        if (Services.MapManager.Map[centerCoord.x, centerCoord.y].isOccupied &&
-            Services.MapManager.Map[centerCoord.x, centerCoord.y].OccupyingTile.isCentralTile &&
-            Services.MapManager.Map[centerCoord.x, centerCoord.y].OccupyingTile.owner != piece.owner)
-            return false;
+        
 
         foreach (Coord coord in hypotheticalTileCoords)
         {
@@ -157,6 +154,12 @@ public class PieceHolder : MonoBehaviour
                 !Services.MapManager.Map[coord.x, coord.y].OccupyingTile.CanBeRemoved()) return false;
 
         }
+
+        if (Services.MapManager.Map[centerCoord.x, centerCoord.y].isOccupied &&
+            Services.MapManager.Map[centerCoord.x, centerCoord.y].OccupyingTile.isCentralTile &&
+            Services.MapManager.Map[centerCoord.x, centerCoord.y].OccupyingTile.owner != piece.owner)
+            return false;
+
         return true;
     }
 
@@ -219,6 +222,7 @@ public class PieceHolder : MonoBehaviour
         }
         if (!placed)
         {
+
             transform.name = "Player " + piece.owner.playerNum + "| X: " + centerCoord.x + ", Y: " + centerCoord.y; 
             piece.owner.OnPiecePlaced(piece);
             Services.EventManager.Fire(new PlayMade(piece));

@@ -86,6 +86,24 @@ public class GameSceneScript : Scene<TransitionData>
         taskManager.Update();
 	}
 
+    public void FloodFill(Coord coord, Player player, List<Coord> visitedCoords)
+    {
+
+        if (coord.x < 0 || coord.y < 0 || coord.x >= Services.MapManager.MapWidth || coord.y >= Services.MapManager.MapHeight) return;
+        if (Services.MapManager.Map[coord.x, coord.y].isOccupied) return;
+        if (visitedCoords.Contains(coord)) return;
+        visitedCoords.Add(coord);
+        Debug.Log(coord);
+        Services.MapManager.Map[coord.x, coord.y].SpriteRenderer.color = player.colorScheme[2];
+
+        FloodFill(new Coord(coord.x + 1, coord.y), player, visitedCoords);
+        FloodFill(new Coord(coord.x - 1, coord.y), player, visitedCoords);
+        FloodFill(new Coord(coord.x, coord.y + 1), player, visitedCoords);
+        FloodFill(new Coord(coord.x, coord.y - 1), player,visitedCoords);
+
+        return;
+    }
+
     public void OnPlayMade(PlayMade play)
     {
         TaskQueue playMadeTasks = new TaskQueue();
@@ -93,7 +111,8 @@ public class GameSceneScript : Scene<TransitionData>
         playMadeTasks.Add(new ParameterizedActionTask<Vector3>(
                                 currentPlayer.DrawPieceTask,
                                 currentPlayer.pieceSpawnPosition.position));
-
+        //Debug.Log(play.piece.centerTile.coord);
+        FloodFill(play.piece.centerTile.coord, currentPlayer, new List<Coord>());
         turnNumber++;
         currentPlayer = players[turnNumber % players.Length];
 
