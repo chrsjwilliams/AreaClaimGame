@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -96,8 +96,9 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 2018488335}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -117,6 +118,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -148,22 +151,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 197641878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b1f16f518294ca499f9e6daf116646f, type: 3}
+  m_Script: {fileID: 11500000, guid: ccf1ac924a2d54ed1a1ece9303fd0e30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   RESTART_GAME: 8
-  _numPlayers: 0
+  _numPlayers: 2
   _player1ColorScheme:
-  - {r: 1, g: 1, b: 1, a: 0}
-  - {r: 0.93333334, g: 0.5529412, b: 0.64705884, a: 1}
-  - {r: 0.90588236, g: 0.3529412, b: 0.4862745, a: 1}
-  - {r: 0.90588236, g: 0.3529412, b: 0.4862745, a: 1}
+  - {r: 1, g: 0.7490196, b: 0.77254903, a: 1}
+  - {r: 1, g: 0.44705883, b: 0.5019608, a: 1}
+  - {r: 1, g: 0.2509804, b: 0.32156864, a: 1}
   _player2ColorScheme:
-  - {r: 1, g: 1, b: 1, a: 0}
-  - {r: 0.5529412, g: 0.64705884, b: 0.93333334, a: 1}
-  - {r: 0.3529412, g: 0.4862745, b: 0.90588236, a: 1}
-  - {r: 0.3529412, g: 0.4862745, b: 0.90588236, a: 1}
-  _mainCamera: {fileID: 0}
+  - {r: 0.7490196, g: 0.77254903, b: 1, a: 1}
+  - {r: 0.54901963, g: 0.5921569, b: 1, a: 1}
+  - {r: 0.2509804, g: 0.32156864, b: 1, a: 1}
+  _mainCamera: {fileID: 519420031}
 --- !u!114 &197641880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,7 +174,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 197641878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8d75672a400b478bb3e3d143e10c88a, type: 3}
+  m_Script: {fileID: 11500000, guid: a692f485c148e4deba688c105a99df84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG_MODE: 0
@@ -200,7 +201,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 197641878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6a9f194afa8cf24399d35bf41b110bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 2653723763a0a4283a0b75bbffe7c918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &519420028
@@ -239,7 +240,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81b0065d66318dd448bfc0f1d96a4195, type: 3}
+  m_Script: {fileID: 11500000, guid: 80e1a828ecaff4150a700260684f1e20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   screenEdges: []
@@ -366,3 +367,64 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!850595691 &2018488335
+LightingSettings:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Settings.lighting
+  serializedVersion: 2
+  m_GIWorkflowMode: 1
+  m_EnableBakedLightmaps: 0
+  m_EnableRealtimeLightmaps: 0
+  m_RealtimeEnvironmentLighting: 1
+  m_BounceScale: 1
+  m_AlbedoBoost: 1
+  m_IndirectOutputScale: 1
+  m_UsingShadowmask: 1
+  m_BakeBackend: 0
+  m_LightmapMaxSize: 1024
+  m_BakeResolution: 40
+  m_Padding: 2
+  m_TextureCompression: 1
+  m_AO: 0
+  m_AOMaxDistance: 1
+  m_CompAOExponent: 1
+  m_CompAOExponentDirect: 0
+  m_ExtractAO: 0
+  m_MixedBakeMode: 2
+  m_LightmapsBakeMode: 1
+  m_FilterMode: 1
+  m_LightmapParameters: {fileID: 0}
+  m_ExportTrainingData: 0
+  m_TrainingDataDestination: TrainingData
+  m_RealtimeResolution: 2
+  m_ForceWhiteAlbedo: 0
+  m_ForceUpdates: 0
+  m_FinalGather: 0
+  m_FinalGatherRayCount: 256
+  m_FinalGatherFiltering: 1
+  m_PVRCulling: 1
+  m_PVRSampling: 1
+  m_PVRDirectSampleCount: 32
+  m_PVRSampleCount: 500
+  m_PVREnvironmentSampleCount: 500
+  m_PVREnvironmentReferencePointCount: 2048
+  m_LightProbeSampleCountMultiplier: 4
+  m_PVRBounces: 2
+  m_PVRRussianRouletteStartBounce: 2
+  m_PVREnvironmentMIS: 0
+  m_PVRFilteringMode: 2
+  m_PVRDenoiserTypeDirect: 0
+  m_PVRDenoiserTypeIndirect: 0
+  m_PVRDenoiserTypeAO: 0
+  m_PVRFilterTypeDirect: 0
+  m_PVRFilterTypeIndirect: 0
+  m_PVRFilterTypeAO: 0
+  m_PVRFilteringGaussRadiusDirect: 1
+  m_PVRFilteringGaussRadiusIndirect: 5
+  m_PVRFilteringGaussRadiusAO: 2
+  m_PVRFilteringAtrousPositionSigmaDirect: 0.5
+  m_PVRFilteringAtrousPositionSigmaIndirect: 2
+  m_PVRFilteringAtrousPositionSigmaAO: 1

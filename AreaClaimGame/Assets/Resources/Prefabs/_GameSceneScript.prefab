@@ -71,14 +71,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1382114393430306185}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7aff1b530561e244a8efb472799bbc0, type: 3}
+  m_Script: {fileID: 11500000, guid: f73c88f16e8ae4dbd9ff9175c86137c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHandSize: 3
   startingHandSize: 3
-  handOffset: {x: -3.5, y: 0.5, z: 0}
-  handSpacing: {x: 3, y: 0}
-  piecesPerHandRow: 3
+  handOffset: {x: 0, y: 0, z: 0}
+  handSpacing: {x: 0, y: 0}
+  piecesPerHandRow: 1
+  handTargetPositions:
+  - {x: 0, y: 0, z: 0}
+  selectedPieceHandPos: 0
   pieceSpawnPosition: {fileID: 3845409507658226947}
 --- !u!1 &1690746812594309800
 GameObject:
@@ -123,7 +126,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1690746812594309800}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19f58c43a415a0c458c37b1fa3900f31, type: 3}
+  m_Script: {fileID: 11500000, guid: a084ae45d7f88453fb5a580d0ac31eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gameOver: 0
@@ -171,14 +174,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 4457938921852713437}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7aff1b530561e244a8efb472799bbc0, type: 3}
+  m_Script: {fileID: 11500000, guid: f73c88f16e8ae4dbd9ff9175c86137c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHandSize: 3
   startingHandSize: 3
-  handOffset: {x: -3.5, y: 1, z: 0}
-  handSpacing: {x: 3, y: 0}
-  piecesPerHandRow: 3
+  handOffset: {x: 1, y: 0, z: 0}
+  handSpacing: {x: 1, y: 0}
+  piecesPerHandRow: 1
+  handTargetPositions:
+  - {x: -3, y: 0, z: 0}
+  selectedPieceHandPos: 0
   pieceSpawnPosition: {fileID: 7851977448462291381}
 --- !u!1 &5426606625282495820
 GameObject:

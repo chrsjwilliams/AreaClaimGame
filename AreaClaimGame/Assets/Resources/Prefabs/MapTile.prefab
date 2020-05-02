@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7988248593734306308}
   - component: {fileID: 3042044229495598932}
   m_Layer: 0
-  m_Name: Tile
+  m_Name: MapTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,6 +48,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -72,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7de551fe4ac8cec45815aa2dda1fb8c4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 378835ae02cc74a2f86645c4d3ec0cb1, type: 3}
   m_Color: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -92,7 +93,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7846114079512713990}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4071b67382f5e134ebf10be0fe23f854, type: 3}
+  m_Script: {fileID: 11500000, guid: 524f5b6095b864fc19d35d777431bd57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!61 &3042044229495598932

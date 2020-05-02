@@ -42,7 +42,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5943946491498229640}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e3e4ed1d19fe2b47b38f1b1095c7461, type: 3}
+  m_Script: {fileID: 11500000, guid: cb35635a544994eb0b8572d0b172f887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   centerCoord:
@@ -63,6 +63,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -95,7 +96,7 @@ SpriteRenderer:
   m_Size: {x: 1.6666666, y: 1.6666666}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &7431780053143553558
